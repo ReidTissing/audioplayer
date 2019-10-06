@@ -1,0 +1,8 @@
+#Blacklist
+img/*
+node_modules/
+uploads/
+.DS_Store
+
+#Whitelist
+!img/repeatIco

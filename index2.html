@@ -1,0 +1,335 @@
+<html>
+
+<head>
+<title>Music Player in js/jQuery</title>
+<style>
+											#dash-playlist{
+												height:500px;
+											}
+
+											 #the-playlist {
+												  list-style-type: none;
+												   width: 400px;
+												}
+
+											.songs_list p {
+												  font: 400 12px/1.5 Georgia, Times New Roman, serif;
+												}
+												 
+												.songs_list {
+												  overflow: auto;
+												  padding: 0 5px 0 5px;
+												}
+												 
+												.songs_list:hover {
+												  
+												}
+
+
+
+											.player_buttons , .delete_buttons{
+												width: 20px;
+												height:20px;
+												margin:5px;
+												outline : none;
+												 cursor: pointer;
+												  outline: none;
+												
+											}
+
+											.delete_buttons  {
+												  float: right;
+												  margin: 0px;
+												}
+
+											.player_buttons:active , .delete_buttons:active {
+											  transform: translateY(1px);
+											}
+
+										
+										</style>
+</head>
+
+<body>
+
+
+
+
+
+		<!-- music player -->
+							<section>
+									<div id="dash-playlist">
+										
+									 <div id='bg' style="opacity:1">
+									 		<p id = "currently_playing">
+
+									 		</p>
+
+										<audio id = "xAudio"></audio>
+
+										<div id = "player_controls">
+										 	<input type = "image" src = "http://testenv.redlabdesign.com/wp-content/uploads/2017/07/previous.png" id="previous_song" class ="player_buttons"> 
+										 	<input type ="image" src = "http://testenv.redlabdesign.com/wp-content/uploads/2017/07/shuffle.png" id="shuffle_playlist" class="player_buttons">	
+										 	<input type ="image" src = "http://testenv.redlabdesign.com/wp-content/uploads/2017/07/replay.png" id="replay" class="player_buttons">	
+										 	<input type ="image" src = "http://testenv.redlabdesign.com/wp-content/uploads/2017/07/next.png" id="next_song" class="player_buttons">	
+									 	</div>
+								
+									 <!-- 
+
+									    <audio id="xAudio" preload="auto" class='wp-audio-shortcode'>
+										<source src="https://glpjt.s3.amazonaws.com/so/av/pf-righteous.mp3" />
+										</audio>
+
+										-->
+									  <!-- 
+									 <div> 
+
+									  <input onclick="document.getElementById('xAudio').play()">Play</button> 
+									  <button onclick="document.getElementById('xAudio').pause()">Pause</button> 
+									  <button onclick="document.getElementById('xAudio').volume += 0.1">Vol+ </button> 
+									  <button onclick="document.getElementById('xAudio').volume -= 0.1">Vol- </button> 
+									</div>
+
+									-->
+
+
+									</div> <!--  ends bg -->
+
+									 <div>
+									 	<ul id="the-playlist">
+    										
+    									</ul>
+
+									 </div>
+
+
+
+									</div>	
+
+							</section> <!--  music player ends here -->
+
+
+
+								<script
+								  src="https://code.jquery.com/jquery-2.2.4.min.js"
+								  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+								  crossorigin="anonymous"></script>
+
+									  <script>
+
+									  // player button id	
+									  var NEXT_BTN_ID = "next_song" ;
+									  var SHUFFLE_BTN_ID = "shuffle_playlist" ;
+									  var REPLAY_BTN_ID = "replay" ;
+									  var PREV_BTN_ID = "previous_song" ;
+
+									  var current_song_index = 0;
+									  var xA  ; // HTML5 audio to be instantianized in ready()
+									   // This is a simple array of strings
+									    var playlist = [
+									    	{
+									    		song_name:"Rightous",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/pf-righteous.mp3"
+									    	},
+									    	{
+									    		song_name:"Balls",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/balls.mp3"
+									    	},
+									    	{
+									    		song_name:"Fight CLub",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/fightclub.mp3"
+									    	},
+
+									    	{
+									    		song_name:"Rightous",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/pf-righteous.mp3"
+									    	},
+									    	{
+									    		song_name:"Balls",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/balls.mp3"
+									    	},
+									    	{
+									    		song_name:"Fight CLub",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/fightclub.mp3"
+									    	},
+
+									    	{
+									    		song_name:"Rightous",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/pf-righteous.mp3"
+									    	},
+									    	{
+									    		song_name:"Balls",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/balls.mp3"
+									    	},
+									    	{
+									    		song_name:"Fight CLub",
+									    		link: "https://glpjt.s3.amazonaws.com/so/av/fightclub.mp3"
+									    	}
+
+									    
+									    ];
+
+									    // handle prev next click of music player	
+										jQuery(".player_buttons").click(function(){
+
+										    var id = this.id;
+										    
+										    var playListLength = playlist.length;
+										   	var  songIndexToPlay ;
+
+										    if(id === NEXT_BTN_ID)
+										    {
+										    	// play next song of playlist	
+										    	 songIndexToPlay = (current_song_index+1)%playListLength;	
+										    }
+										    else if(id === PREV_BTN_ID){
+										    	
+										    	//play previous song of playlist
+
+										    	if(current_song_index == 0)
+										    		songIndexToPlay=playListLength-1;	
+										    	else
+										    		songIndexToPlay = current_song_index-1;
+
+										    }else if(id === SHUFFLE_BTN_ID){
+										    	// shuffle playlist
+										    	shuffle();
+										    	reDrawPlayList();
+
+										    	songIndexToPlay = 0;
+										    }else if (id === REPLAY_BTN_ID){
+
+										    	//replay play list
+										    	songIndexToPlay = 0 ; 
+										    }
+
+										    player(songIndexToPlay);
+
+										});	
+
+									
+
+
+
+
+									jQuery(document).ready(function(jQuery) {    
+									   
+									    
+									    // Remember that element must start out at opacity:0
+									    // The duration should be only a number outside of the curly brackets
+									    jQuery('div#bg').animate({
+									      opacity: 1
+									    }, 1000);
+
+									    reDrawPlayList();
+									 // set the player	
+									      xA = document.getElementById("xAudio");
+									      xA.volume = 0;
+									      xA.controls = true;
+										 player(0); // Call the player() function at 0 index of playlist array
+									  
+									});
+
+
+									function reDrawPlayList(){
+
+										// clean the playlist 
+										jQuery('#the-playlist').html('');
+
+											   // set the playlist
+									    for (var n = 0; n < playlist.length; ++n) {
+
+									    	var song_list_element = " <li row_index= "+n+" class = 'songs_list'>\
+																      <p>"+playlist[n].song_name+
+																      " <img list_index= "+n+" class = 'delete_buttons' src='http://testenv.redlabdesign.com/wp-content/uploads/2017/07/delete.png'/> </p>\
+																    </li>";
+												jQuery('#the-playlist').append(song_list_element);
+											}
+
+
+											 // handle delete song click of music player
+												 // dynamic binding	to DOM
+												jQuery(".delete_buttons").click(function(){
+
+												    var id = this.id;
+												   	var song_index =  parseInt($(this).attr('list_index'));
+												   	alert("deleting song number : " + ( song_index + 1 ) );
+												});	
+
+
+									}
+
+										//https://stackoverflow.com/a/2450976/2442565
+										function shuffle() {
+										  var currentIndex = playlist.length, temporaryValue, randomIndex;
+
+										  // While there remain elements to shuffle...
+										  while (0 !== currentIndex) {
+
+										    // Pick a remaining element...
+										    randomIndex = Math.floor(Math.random() * currentIndex);
+										    currentIndex -= 1;
+
+										    // And swap it with the current element.
+										    temporaryValue = playlist[currentIndex];
+										    playlist[currentIndex] = playlist[randomIndex];
+										    playlist[randomIndex] = temporaryValue;
+										  }
+
+										 
+										}
+
+
+									      function player(x) {
+									        var i = 0;
+									        xA.src = playlist[x].link; // x is the index number of the playlist array 
+									        xA.load();            // use the load method when changing src
+									        xA.play();
+											xA.onended = function() { // Once the initial file is played it plays the rest of the files
+									          /* This would be better as a 'for' loop */
+									       
+
+									          i = current_song_index+1;  // here dont increment i to be in global sync of current_song_index
+
+									          if (i > playlist.length -1) {   
+
+									          	  //i = 0;   //repeat playlist 
+									          	// enable replay button
+									          	$("#currently_playing").text("Playlist over... " );
+									          	//console.log("playlist over");
+												return;	
+									          }   
+									                          //         ^
+										          xA.src = playlist[i].link;   // Rinse,  ^
+										          xA.load();              // Lather, ^
+										          xA.play();              // and.....^
+
+										      		changeCurrentSongPackground(current_song_index,i);
+										      	
+
+									        }
+
+									      	changeCurrentSongPackground(current_song_index,x);
+
+									      }
+
+									      // changes the packground of currently playing song	
+									      function changeCurrentSongPackground( previousIndex, currentIndex){
+
+									      	// set the name of currently playing song 
+									      	$("#currently_playing").text("Playing song " + playlist[currentIndex].song_name + "....");
+									      	  //update background color of previous song list 
+									         $("[row_index="+previousIndex+"]").css("background","white");
+
+									           current_song_index = currentIndex; //  update global current song index
+
+									        // update bakcground of current song index;
+									         $("[row_index="+current_song_index+"]").css("background-color","#ecf9ff");
+									      }	
+
+									</script>
+
+
+</body>
+
+</html>					

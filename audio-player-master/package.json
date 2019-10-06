@@ -1,0 +1,29 @@
+{
+  "name": "audio-player",
+  "version": "0.0.9",
+  "description": "Audio player",
+  "main": "index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuentinMcCarthy/audio-player.git"
+  },
+  "keywords": [
+    "audio",
+    "js"
+  ],
+  "author": "Quentin McCarthy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuentinMcCarthy/audio-player/issues"
+  },
+  "homepage": "https://github.com/QuentinMcCarthy/audio-player#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.5.0",
+    "jquery": "^3.4.0",
+    "jquery-form": "^4.2.2",
+    "jquery-knob": "^1.2.11"
+  }
+}
